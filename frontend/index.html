@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ❌ CSP META REMOVED (CSP netlify.toml se aayega) -->
+
+    <title>Cyber Shield - Real-Time Security Dashboard</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Socket.io client library (ONLY ONCE) -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+
+<body>
+    <!-- Attack Alert Overlay -->
+    <div id="attackAlert" class="alert-overlay">
+        <div class="alert-container">
+            <div class="red-light" id="redLight"></div>
+            <h1 class="alert-title"><i class="fas fa-skull-crossbones"></i> CYBER ATTACK DETECTED!</h1>
+            <div class="timer-display" id="timer">60:00</div>
+            <div class="siren-animation">
+                <i class="fas fa-exclamation-triangle"></i>
+                <i class="fas fa-exclamation-triangle"></i>
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <!--<button class="defend-btn" id="stopAttack">ACTIVATE DEFENSE PROTOCOL</button>-->
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="cyber-container">
+        <!-- Header -->
+        <header class="cyber-header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>CYBER<span>SHIELD</span> <br> Developed By <span>Abhi Sharma</span></h1>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot active" id="statusDot"></div>
+                <span id="statusText">SYSTEM SECURE</span>
+            </div>
+        </header>
+
+        <!-- Network Visualization -->
+        <div class="network-visual">
+            <div class="node" id="node1"><i class="fas fa-server"></i></div>
+            <div class="node" id="node2"><i class="fas fa-database"></i></div>
+            <div class="node" id="node3"><i class="fas fa-user-shield"></i></div>
+            <div class="connecting-lines"></div>
+            <div class="data-packets"></div>
+        </div>
+
+        <!-- Dashboard Widgets -->
+        <div class="dashboard-grid">
+            <div class="widget">
+                <h3><i class="fas fa-network-wired"></i> NETWORK TRAFFIC</h3>
+                <div class="traffic-meter">
+                    <div class="meter-fill" id="trafficMeter"></div>
+                </div>
+                <div class="stats">24.7 GB/s</div>
+            </div>
+
+            <div class="widget">
+                <h3><i class="fas fa-fire"></i> THREAT LEVEL</h3>
+                <div class="threat-level low" id="threatLevel">
+                    <div class="level-bar"></div>
+                    <span>LOW</span>
+                </div>
+            </div>
+
+            <div class="widget">
+                <h3><i class="fas fa-clock"></i> UPTIME</h3>
+                <div class="uptime-display">99.98%</div>
+                <div class="uptime-graph">
+                    <div class="graph-bar"></div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <h3><i class="fas fa-bolt"></i> SYSTEM LOAD</h3>
+                <div class="load-indicator">
+                    <div class="load-segment"></div>
+                    <div class="load-segment"></div>
+                    <div class="load-segment"></div>
+                    <div class="load-segment"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <h2><i class="fas fa-gamepad"></i> SECURITY CONTROLS</h2>
+            <div class="controls">
+                <!--<button class="cyber-btn" id="simulateAttack">
+                    <i class="fas fa-bug"></i> SIMULATE ATTACK
+                </button>-->
+                <button class="cyber-btn" id="resetSystem">
+                    <i class="fas fa-redo"></i> RESET SYSTEM
+                </button>
+                <!--<button class="cyber-btn" id="testSiren">
+                    <i class="fas fa-bell"></i> TEST ALARM
+                </button>-->
+            </div>
+
+            <div class="attack-instructions">
+                <h3><i class="fas fa-info-circle"></i> STOP THE ATTACK & WIN THE COMPETITION</h3>
+                <p>Your mission is to defend, detect, and respond faster than the attacker.</p>
+                <ul>
+                    <li><code>Monitor</code> suspicious activity and identify attack patterns</li>
+                    <li>Block malicious requests before they cause damage</li>
+                    <li>Analyze logs and take smart defensive decisions</li>
+                    <li>Every attack stopped brings you closer to victory</li>
+                    <li>Think like an attacker, act like a defender</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Fake Logs -->
+        <div class="log-container">
+            <h3><i class="fas fa-scroll"></i> SECURITY LOGS</h3>
+            <div class="logs" id="logDisplay">
+                <div class="log-entry"><span class="time">[12:34:56]</span> System initialized</div>
+                <div class="log-entry"><span class="time">[12:35:10]</span> Firewall activated</div>
+                <div class="log-entry"><span class="time">[12:36:22]</span> All systems nominal</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio for Siren -->
+    <audio id="sirenAudio" loop>
+        <source src="sounds/siren.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Real-time stats -->
+    <div class="real-time-stats">
+        <h3><i class="fas fa-users"></i> LIVE USERS</h3>
+        <div class="stat-number" id="userCount">1</div>
+        
+        <h3><i class="fas fa-skull"></i> ACTIVE ATTACKERS</h3>
+        <div class="attacker-list" id="attackerList">
+            <div class="attacker-item" id="attackerInfo">None</div>
+        </div>
+    </div>
+
+    <!-- ❌ DUPLICATE SOCKET.IO SCRIPT REMOVED -->
+
+    <!-- Main JS -->
+    <script src="script.js" defer></script>
+</body>
+</html>
