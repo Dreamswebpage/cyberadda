@@ -1,4 +1,6 @@
 const express = require('express');
+app.set('trust proxy', 1);
+
 const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
@@ -287,3 +289,4 @@ server.listen(PORT, () => {
   console.log(`🌐 WebSocket ready for real-time communication`);
 
 });
+
