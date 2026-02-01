@@ -10,7 +10,7 @@ const server = http.createServer(app);
 
 // CORS configuration for production
 const io = socketIo(server, {
-  path: "/socket.io",          // ✅ FIX 1
+  path: "/socket.io",
   cors: {
     origin: [
       "https://cyberadda.netlify.app",
@@ -20,11 +20,10 @@ const io = socketIo(server, {
     methods: ["GET", "POST"],
     credentials: true
   },
-  transports: ["websocket"],   // ✅ FIX 2
-  allowEIO3: true,             // ✅ FIX 3
-  pingTimeout: 60000,
-  pingInterval: 25000
+  transports: ["websocket"],
+  allowEIO3: true
 });
+
 
 app.use(cors({
   origin: [
@@ -289,4 +288,5 @@ server.listen(PORT, () => {
   console.log(`🌐 WebSocket ready for real-time communication`);
 
 });
+
 
