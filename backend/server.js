@@ -8,6 +8,7 @@ const server = http.createServer(app);
 
 // CORS configuration for production
 const io = socketIo(server, {
+  path: "/socket.io",          // ✅ FIX 1
   cors: {
     origin: [
       "https://cyberadda.netlify.app",
@@ -17,7 +18,10 @@ const io = socketIo(server, {
     methods: ["GET", "POST"],
     credentials: true
   },
-  transports: ['websocket']
+  transports: ["websocket"],   // ✅ FIX 2
+  allowEIO3: true,             // ✅ FIX 3
+  pingTimeout: 60000,
+  pingInterval: 25000
 });
 
 app.use(cors({
@@ -281,4 +285,5 @@ server.listen(PORT, () => {
   console.log(`🚀 Cyber Backend Server running on port ${PORT}`);
   console.log(`✅ Health check: http://localhost:${PORT}/health`);
   console.log(`🌐 WebSocket ready for real-time communication`);
+
 });
